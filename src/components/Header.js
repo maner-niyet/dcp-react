@@ -31,7 +31,7 @@ function Header() {
                   <span>SERIES</span>
                </a>
            </NavMenu>
-           <UserImg src="https://bolojawan.com/wp-content/uploads/2017/12/168796-281x281-girl-swear-icon-1.png"/>
+           <UserImg src="https://thumbs.dreamstime.com/b/cat-avatar-illustration-cartoon-45383590.jpg"/>
         </Nav>
     )
 }
