@@ -1,22 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import {selectUserName, selectUserPhoto, setUserLogin, setSignOut} from "../features/user/userSlice"
-import {useDispatch, useSelector} from "react-redux"
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import {
+    selectUserName, 
+    selectUserPhoto, 
+    setUserLogin, 
+    setSignOut
+} from "../features/user/userSlice"
+import {
+    useDispatch, 
+    useSelector
+} from "react-redux"
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signOut,
+    onAuthStateChanged 
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom"
 
 function Header() {
     const dispatch = useDispatch()
     const userName = useSelector(selectUserName)
-    const userPhoto = useSelector(selectUserPhoto)
+    //const userPhoto = useSelector(selectUserPhoto)
     const navigate = useNavigate();
 
     //after creating Logo and LogoContainer
     //creating signIn function
     const provider = new GoogleAuthProvider();
-    
+    const auth = getAuth();
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if(user) {
+                dispatch(setUserLogin({
+                   name: user.displayName,
+                   email: user.email,
+                   photo: user.photoURL  
+                }))
+                navigate('/');
+            }
+        }) 
+    }, [])
+
     const signIn = () => {
-        const auth = getAuth();
         signInWithPopup(auth, provider)
         .then((result) => {
             const user = result.user;
@@ -32,14 +58,12 @@ function Header() {
 
     //creating signIn function
     const signOutFunc = () => {
-        const auth = getAuth();
         signOut(auth)
         .then(() => {
             dispatch(setSignOut())
             navigate('/login');
         })
     }
-   
 
     return (
         <Nav>
@@ -77,10 +101,8 @@ function Header() {
                     </a>
                 </NavMenu>
                 <UserImg onClick={signOutFunc} src="https://thumbs.dreamstime.com/b/cat-avatar-illustration-cartoon-45383590.jpg"/>
-            
             </>
            }
-           
         </Nav>
     )
 }

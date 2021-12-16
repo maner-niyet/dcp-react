@@ -19,20 +19,10 @@ function Home() {
                 return {id: doc.id, ...doc.data()}
             })
             dispatch(setMovies(tempMovies))
-
-        })
-       /*  const getMovies = async () => {
-            const data = await getDocs(moviesCollection)
-            setMovies(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
-            console.log(data)
-            console.log(movies)
-        }
-        getMovies() */
-        
+        })      
     }, [])
 
     return (
-        
         <Container>
             <ImgSlider/>
             <Viewers/>
@@ -42,8 +32,6 @@ function Home() {
 }
 
 export default Home
-
-
 
 const Container = styled.main`
     min-height: calc(100vh - 70px);
