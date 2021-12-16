@@ -29,7 +29,6 @@ function ImgSlider() {
 
 export default ImgSlider
 
-
 const Carousel = styled(Slider)`
     margin-top: 20px;
 
@@ -53,7 +52,6 @@ const Carousel = styled(Slider)`
     }
 
 `
-
 const Wrap = styled.div`
     cursor: pointer;
     img {

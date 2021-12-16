@@ -1,37 +1,76 @@
-import React from 'react'
+import React, { useEffect, useState} from 'react'
 import styled from 'styled-components'
+import { useParams } from "react-router-dom"
+import db from '../firebase';
+import {collection, getDocs} from "firebase/firestore"
 
 function Detail() {
+    const { id } = useParams();
+    const [movie, setMovie] = useState()
+    console.log(id, "this is id")
+    
+    /* useEffect(() => {
+        let movColection = collection(db, "movies")
+        getDocs(movColection)
+        .then((movSnapshot) => {
+            let movieInfo = movSnapshot.docs.reduce((filtered, doc) => {
+                if(doc.id == id) {
+                    filtered = doc.data()
+                } 
+                return filtered
+            }, {})
+            setMovie(movieInfo)
+        })
+    }, []) */
+    useEffect(() => {
+        let movColection = collection(db, "movies")
+        getDocs(movColection)
+        .then((movSnapshot) => {
+            movSnapshot.docs.forEach((doc) => {
+                if(doc.id == id) {
+                    setMovie(doc.data())
+                }
+            })
+        })
+    }, [])
+
+    console.log("movie is ", movie)
+
     return (
         <Container>
-            <Background>
-                <img src="https://img.soap2day.rs/resize/1278x768/e9/5e/e95ea42bf66d5337fbf46b5550dd436d/e95ea42bf66d5337fbf46b5550dd436d.jpg"/>
-            </Background>
-            <ImageTitle>
-                <img src="https://images.fanart.tv/fanart/movies/2062/hdmovielogo/ratatouille-5e6eb19f075d8.png"/>
-            </ImageTitle>
-            <Controls>
-                <PlayButton>
-                    <img src="/images/play-icon-black.png"/>
-                    <span>PLAY</span>
-                </PlayButton>
-                <TrailerButton>
-                    <img src="/images/play-icon-white.png"/>
-                    <span>TRAILER</span>
-                </TrailerButton>
-                <AddButton>
-                    <span>+</span>
-                </AddButton>
-                <GroupWatchButton>
-                    <img src="/images/group-icon.png"/>
-                </GroupWatchButton>
-            </Controls>
-            <SubTitle>
-                2018 * 7m * Family, Fantasy, Kids, Animation
-            </SubTitle>
-            <Description>
-                A Chinese-Canadian woman suffering from empty nest syndrome gets a second shot at motherhood when one of her handmade dumplings comes alive.
-            </Description>
+            {movie && (
+            <>
+                <Background>
+                    <img src={movie.backgroundImg}/>
+                </Background>
+                <ImageTitle>
+                    <img src={movie.imageTitle}/>
+                </ImageTitle>
+                <Controls>
+                    <PlayButton>
+                        <img src="/images/play-icon-black.png"/>
+                        <span>PLAY</span>
+                    </PlayButton>
+                    <TrailerButton>
+                        <img src="/images/play-icon-white.png"/>
+                        <span>TRAILER</span>
+                    </TrailerButton>
+                    <AddButton>
+                        <span>+</span>
+                    </AddButton>
+                    <GroupWatchButton>
+                        <img src="/images/group-icon.png"/>
+                    </GroupWatchButton>
+                </Controls>
+                <SubTitle>
+                    {movie.subTitle}
+                </SubTitle>
+                <Description>
+                    {movie.description}
+                </Description>
+            </>
+            )}
+            
         </Container>
     )
 }
